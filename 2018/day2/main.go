@@ -7,7 +7,7 @@ import (
 	"github.com/johnshiver/advent_of_code/2018/utils"
 )
 
-const WORKER_COUNT = 1
+const WORKER_COUNT = 10
 
 type result struct {
 	twos   int
@@ -102,7 +102,7 @@ func part2() {
 		posChan <- i
 	}
 	close(posChan)
-	for i := 0; i < 1; i++ {
+	for i := 0; i < WORKER_COUNT; i++ {
 		go compareIDs(vals, posChan, resultChan)
 	}
 
