@@ -94,6 +94,17 @@ func countOverlaps(board [][]int) int {
 	return total
 }
 
+func checkSquareOnBoard(board [][]int, s square) bool {
+	for row := s.y; row < s.y+s.height; row++ {
+		for col := s.x; col < s.x+s.width; col++ {
+			if board[row][col] != s.id {
+				return false
+			}
+		}
+	}
+	return true
+}
+
 func main() {
 	const width = 1000
 	const height = 1000
@@ -102,28 +113,21 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
+	allSquares := []square{}
 	for _, s := range squares {
 		newSquare, err := createSquare(s)
+		allSquares = append(allSquares, newSquare)
 		if err != nil {
 			log.Fatal(err)
 		}
 		board = putSquareOnBoard(board, newSquare)
 	}
 	fmt.Println(countOverlaps(board))
-
-	// test put on board
-	// b := createBoard(3, 3)
-	// ns, err := createSquare("#1 @ 0,0: 2x2")
-	// if err != nil {
-	// 	log.Fatal(err)
-	// }
-	// b = putSquareOnBoard(b, ns)
-	// fmt.Println(b)
-
-	// testString := squares[0]
-	// testSquare, err := createSquare(testString)
-	// if err != nil {
-	// 	log.Fatal(err)
-	// }
-	// fmt.Println(testSquare)
+	for _, s := range allSquares {
+		match := checkSquareOnBoard(board, s)
+		if match {
+			fmt.Println(s.id)
+			return
+		}
+	}
 }
