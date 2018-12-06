@@ -97,6 +97,20 @@ func attachGuardIDs(records []*recordLine) []*recordLine {
 	return records
 }
 
+func createMinutesGrid(guardRecords []*recordLine) []int {
+	minutesGrid := make([]int, 61)
+	var previous *recordLine
+	for _, r := range guardRecords {
+		if r.Status == AWAKE && previous != nil && !r.isGuard() {
+			for x := previous.TimeStamp; x.Before(r.TimeStamp); x = x.Add(time.Minute) {
+				minutesGrid[x.Minute()]++
+			}
+		}
+		previous = r
+	}
+	return minutesGrid
+}
+
 func strategyOne(guardRecords map[int][]*recordLine) (int, int) {
 	var largestGuardID int
 	var mostMinutes int
@@ -131,6 +145,28 @@ func strategyOne(guardRecords map[int][]*recordLine) (int, int) {
 	return largestGuardID, largestIndex
 }
 
+func strategyTwo(guardRecords map[int][]*recordLine) (int, int) {
+	var guardMinuteGrid = make(map[int][]int)
+	for guardID, records := range guardRecords {
+		guardMinuteGrid[guardID] = createMinutesGrid(records)
+	}
+
+	var largestGuardID int
+	var mostFrequent int
+	var largestIndex int
+	for guardID, minuteGrid := range guardMinuteGrid {
+		for i, v := range minuteGrid {
+			if v > mostFrequent {
+				mostFrequent = v
+				largestIndex = i
+				largestGuardID = guardID
+			}
+		}
+	}
+
+	return largestGuardID, largestIndex
+}
+
 func createGuardRecordsMap(records []*recordLine) map[int][]*recordLine {
 	// records must be sorted by TimeStamp
 	sort.Slice(records, func(i, j int) bool {
@@ -159,6 +195,9 @@ func main() {
 	attachGuardIDs(records)
 	guardRecordsMap := createGuardRecordsMap(records)
 	guardID, minute := strategyOne(guardRecordsMap)
+	fmt.Println(guardID, minute)
+	fmt.Println(guardID * minute)
+	guardID, minute = strategyTwo(guardRecordsMap)
 	fmt.Println(guardID, minute)
 	fmt.Println(guardID * minute)
 }
