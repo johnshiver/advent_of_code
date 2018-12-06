@@ -69,7 +69,6 @@ func createSquare(inputLine string) (square, error) {
 func putSquareOnBoard(board [][]int, s square) [][]int {
 	// [row][col]
 	// 3x3 == [3][3]
-	fmt.Println(s)
 	for row := s.y; row < s.y+s.height; row++ {
 		for col := s.x; col < s.x+s.width; col++ {
 			if board[row][col] == 0 {
