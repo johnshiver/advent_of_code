@@ -42,12 +42,7 @@ func removeDeadLinks(polymerString string, deadLinks []int) string {
 	return string(finalBytes)
 }
 
-func main() {
-	theString, err := utils.ReadFileofStrings("input.txt")
-	if err != nil {
-		log.Fatal(err)
-	}
-	polymerString := theString[0]
+func reducePolymer(polymerString string) string {
 	inProgress := true
 	for inProgress {
 		deadLinks := checkReactions(polymerString)
@@ -65,6 +60,49 @@ func main() {
 		}
 		polymerString = removeDeadLinks(polymerString, deadLinks)
 	}
-	fmt.Println(polymerString)
-	fmt.Println(len(polymerString))
+	return polymerString
+}
+
+func removeElement(e1, e2 byte, polymerString string) []int {
+	fmt.Println(e1, e2)
+	i := 0
+	ps := string(polymerString)
+	deadLinks := make([]int, len(ps))
+	for i < len(ps) {
+		ch1 := ps[i]
+		if ch1 == e1 || ch1 == e2 {
+			deadLinks[i] = 1
+		}
+		i++
+	}
+	return deadLinks
+}
+
+func part2() {
+
+}
+
+func main() {
+	theString, err := utils.ReadFileofStrings("input.txt")
+	if err != nil {
+		log.Fatal(err)
+	}
+	polymerString := theString[0]
+	smallestChange := 320000000
+	alphabet := "AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz"
+	i := 0
+	j := 1
+	elemnChan := make(chan []int)
+	for j < len(alphabet) {
+		deadElements := removeElement(alphabet[i], alphabet[j], polymerString)
+		newPolymer := removeDeadLinks(polymerString, deadElements)
+		reducedPolymer := reducePolymer(newPolymer)
+		if len(reducedPolymer) < smallestChange {
+			smallestChange = len(reducedPolymer)
+		}
+		i += 2
+		j += 2
+	}
+
+	fmt.Println(smallestChange)
 }
