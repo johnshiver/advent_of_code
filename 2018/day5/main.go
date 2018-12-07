@@ -64,7 +64,6 @@ func reducePolymer(polymerString string) string {
 }
 
 func removeElement(e1, e2 byte, polymerString string) []int {
-	fmt.Println(e1, e2)
 	i := 0
 	ps := string(polymerString)
 	deadLinks := make([]int, len(ps))
@@ -78,8 +77,12 @@ func removeElement(e1, e2 byte, polymerString string) []int {
 	return deadLinks
 }
 
-func part2() {
-
+func part2(polymerString string, elemChan chan []int, results chan int) {
+	for deadElements := range elemChan {
+		newPolymer := removeDeadLinks(polymerString, deadElements)
+		reducedPolymer := reducePolymer(newPolymer)
+		results <- len(reducedPolymer)
+	}
 }
 
 func main() {
@@ -92,17 +95,24 @@ func main() {
 	alphabet := "AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz"
 	i := 0
 	j := 1
-	elemnChan := make(chan []int)
+	elemnChan := make(chan []int, 26)
+	results := make(chan int, 26)
+	for w := 0; w < 8; w++ {
+		go part2(polymerString, elemnChan, results)
+	}
 	for j < len(alphabet) {
 		deadElements := removeElement(alphabet[i], alphabet[j], polymerString)
-		newPolymer := removeDeadLinks(polymerString, deadElements)
-		reducedPolymer := reducePolymer(newPolymer)
-		if len(reducedPolymer) < smallestChange {
-			smallestChange = len(reducedPolymer)
-		}
+		elemnChan <- deadElements
 		i += 2
 		j += 2
 	}
 
+	for c := 0; c < 26; c++ {
+		polymerSize := <-results
+		fmt.Println(polymerSize)
+		if polymerSize < smallestChange {
+			smallestChange = polymerSize
+		}
+	}
 	fmt.Println(smallestChange)
 }
