@@ -10,7 +10,7 @@ import (
 //
 func ReadFileofInts(fileName string) ([]int, error) {
 
-	file, err := os.Open("input.txt")
+	file, err := os.Open(fileName)
 	if err != nil {
 		return nil, err
 	}
@@ -37,7 +37,7 @@ func ReadFileofInts(fileName string) ([]int, error) {
 //
 func ReadFileofStrings(fileName string) ([]string, error) {
 
-	file, err := os.Open("input.txt")
+	file, err := os.Open(fileName)
 	if err != nil {
 		return nil, err
 	}
@@ -54,4 +54,13 @@ func ReadFileofStrings(fileName string) ([]string, error) {
 		return nil, err
 	}
 	return allVals, nil
+}
+
+// Abs ...
+//
+func Abs(x int) int {
+	if x < 0 {
+		return -x
+	}
+	return x
 }
