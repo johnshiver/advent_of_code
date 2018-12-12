@@ -15,6 +15,8 @@ type coordinate struct {
 	label int
 }
 
+const safeDistance = 10000
+
 func createGrid(coordinates []coordinate) [][]int {
 	var maxX, maxY int
 	grid := [][]int{}
@@ -86,6 +88,34 @@ func calculateManhattanDistances(grid [][]int, coords []coordinate) {
 	}
 }
 
+func calculateManhattanDistances2(grid [][]int, coords []coordinate) {
+
+	for y := 0; y < len(grid); y++ {
+		for x := 0; x < len(grid[0]); x++ {
+			totalDistance := 0
+			for _, c := range coords {
+				manDistance := utils.Abs(x-c.x) + utils.Abs(y-c.y)
+				totalDistance += manDistance
+			}
+			if totalDistance < safeDistance {
+				grid[y][x] = 9
+			}
+		}
+	}
+}
+
+func countArea2(grid [][]int) int {
+	safeArea := 0
+	for y := 0; y < len(grid); y++ {
+		for x := 0; x < len(grid[0]); x++ {
+			if grid[y][x] == 9 {
+				safeArea++
+			}
+		}
+	}
+	return safeArea
+}
+
 func isOnEdge(x, y int, grid [][]int) bool {
 	if x == 0 || y == 0 || x == len(grid[0])-1 || y == len(grid)-1 {
 		return true
@@ -138,6 +168,9 @@ func main() {
 	}
 	grid := createGrid(allCoords)
 	calculateManhattanDistances(grid, allCoords)
-	printGrid(grid)
 	fmt.Println(countArea(grid))
+
+	grid = createGrid(allCoords)
+	calculateManhattanDistances2(grid, allCoords)
+	fmt.Println(countArea2(grid))
 }
