@@ -42,6 +42,32 @@ func (n *Node) getMetaDataValPos() []int {
 	return []int{n.start + 2, n.end() + 1}
 }
 
+func (n *Node) value(treeVals []int) int {
+	var val int
+	metaDataPos := n.getMetaDataValPos()
+	metadats := treeVals[metaDataPos[0]:metaDataPos[1]]
+	// no child nodes, sum meta data entries
+	if len(n.children) < 1 {
+		for _, i := range metadats {
+			val += i
+		}
+	} else {
+		// if there are children, sum of values of child nodes reference by metadata entries
+		for _, i := range metadats {
+			// doesnt use 0 index
+			i--
+			if i >= len(n.children) {
+				continue
+			} else {
+				val += n.children[i].value(treeVals)
+			}
+		}
+	}
+
+	return val
+
+}
+
 func createArrayFromInput(filename string) []int {
 	file, err := os.Open(filename)
 	if err != nil {
@@ -127,4 +153,5 @@ func main() {
 		sum += i
 	}
 	fmt.Println(sum)
+	fmt.Println(roots[0].value(tree))
 }
