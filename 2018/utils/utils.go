@@ -64,3 +64,13 @@ func Abs(x int) int {
 	}
 	return x
 }
+
+// given a v
+func IndexOf(val int, gridPositions []int) int {
+	for k, v := range gridPositions {
+		if val == v {
+			return k
+		}
+	}
+	return -1
+}

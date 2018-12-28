@@ -89,8 +89,8 @@ type Work struct {
 
 func part2() {
 	const WORKER_COUNT = 8
-	resultChan := make(chan *Result, 1000)
-	workChan := make(chan *Work, 10000)
+	resultChan := make(chan *Result, 100000)
+	workChan := make(chan *Work, 1000000)
 	serialNumber := 2866
 	grid := createGrid()
 	fillInPowerLevels(serialNumber, grid)
@@ -123,7 +123,7 @@ func part2() {
 		if r.power > largestResult.power {
 			largestResult = r
 		}
-		if resultsSeen%100000 == 0 {
+		if resultsSeen%1000000 == 0 {
 			fmt.Printf("Have seen %d results\n", resultsSeen)
 			fmt.Printf("Largest sofar: %v", largestResult)
 			fmt.Println()
