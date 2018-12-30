@@ -13,9 +13,9 @@ type simulation struct {
 	rules       map[string]string
 }
 
-func (s *simulation) getPlantCount(startingPot int) int {
+func (s *simulation) getPlantCount(startingPot, numGeneration int) int {
 	count := 0
-	lastGen := s.generations[len(s.generations)-1]
+	lastGen := s.generations[numGeneration]
 	for i, v := range lastGen.plants {
 		if v == "#" {
 			count += i - startingPot
@@ -69,10 +69,13 @@ func parseInitStateAndRulesFromInput(inputFile string) (string, map[string]strin
 }
 
 func part1() {
-	const numGeneration = 21
+
+	// const numGeneration = 20
+	const numGeneration = 500
+
 	init, rules := parseInitStateAndRulesFromInput("input.txt")
 	p1Simulation := &simulation{rules: rules, generations: make(map[int]*generation)}
-	bufferSize := 50
+	bufferSize := 10000
 	buffer := []string{}
 	for i := 0; i < bufferSize; i++ {
 		buffer = append(buffer, ".")
@@ -84,20 +87,22 @@ func part1() {
 	}
 
 	prevGeneration := createGenerationFromInitialState(0, buffer)
-	p1Simulation.generations[0] = prevGeneration
-	for n := 1; n < numGeneration; n++ {
+	//	p1Simulation.generations[0] = prevGeneration
+	for n := 1; n <= numGeneration; n++ {
 		newGeneration := createGenerationFromInitialState(n, prevGeneration.plants)
-		p1Simulation.generations[n] = newGeneration
+		//	p1Simulation.generations[n] = newGeneration
 		newGeneration.applyRules(p1Simulation.rules)
 		prevGeneration = newGeneration
+		if n == numGeneration {
+			p1Simulation.generations[n] = newGeneration
+		}
 	}
-	for n := 0; n < numGeneration; n++ {
-		fmt.Println(n, strings.Join(p1Simulation.generations[n].plants, ""))
-	}
-	fmt.Println(p1Simulation.getPlantCount(bufferSize))
+	// for n := 0; n < numGeneration; n++ {
+	// 	fmt.Println(n, strings.Join(p1Simulation.generations[n].plants, ""))
+	// }
+	fmt.Println(p1Simulation.getPlantCount(bufferSize, numGeneration))
 }
 
 func main() {
 	part1()
-
 }
