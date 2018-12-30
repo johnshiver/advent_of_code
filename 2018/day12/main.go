@@ -72,8 +72,7 @@ func part1() {
 	const numGeneration = 21
 	init, rules := parseInitStateAndRulesFromInput("input.txt")
 	p1Simulation := &simulation{rules: rules, generations: make(map[int]*generation)}
-
-	bufferSize := 20
+	bufferSize := 50
 	buffer := []string{}
 	for i := 0; i < bufferSize; i++ {
 		buffer = append(buffer, ".")
@@ -83,9 +82,6 @@ func part1() {
 	for i := 0; i < bufferSize; i++ {
 		buffer = append(buffer, ".")
 	}
-
-	bString := strings.Join(buffer, "")
-	fmt.Println(strings.Index(bString, "#"))
 
 	prevGeneration := createGenerationFromInitialState(0, buffer)
 	p1Simulation.generations[0] = prevGeneration
@@ -98,7 +94,7 @@ func part1() {
 	for n := 0; n < numGeneration; n++ {
 		fmt.Println(n, strings.Join(p1Simulation.generations[n].plants, ""))
 	}
-	fmt.Println(p1Simulation.getPlantCount(20))
+	fmt.Println(p1Simulation.getPlantCount(bufferSize))
 }
 
 func main() {
