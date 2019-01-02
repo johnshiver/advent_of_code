@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"log"
 	"sort"
+	"strings"
 
 	"github.com/johnshiver/advent_of_code/2018/utils"
 )
@@ -31,7 +32,7 @@ func (tc *trackCar) makeTurn() (string, error) {
 	}
 }
 
-func (tc *trackCar) makeMove(grid []string) {
+func (tc *trackCar) makeMove(grid [][]string) {
 	switch tc.direction {
 	case ">":
 		tc.x++
@@ -96,27 +97,30 @@ func (tc *trackCar) makeMove(grid []string) {
 				tc.direction = ">"
 			}
 		case "right":
-		case ">":
-			tc.direction = "v"
-		case "<":
-			tc.direction = "^"
-		case "^":
-			tc.direction = ">"
-		case "v":
-			tc.direction = "<"
+			switch tc.direction {
+			case ">":
+				tc.direction = "v"
+			case "<":
+				tc.direction = "^"
+			case "^":
+				tc.direction = ">"
+			case "v":
+				tc.direction = "<"
+			}
 		case "straight":
 		}
 	default:
 	}
 }
 
-func createTrackCarsFromGrid(grid []string) []*trackCar {
+func createTrackCarsFromGrid(grid [][]string) []*trackCar {
 	trackCars := []*trackCar{}
-	for y, l := range grid {
-		for x := 0; x < len(l); x++ {
-			curBlock := string(l[x])
+	for y := 0; y < len(grid); y++ {
+		for x := 0; x < len(grid[y]); x++ {
+			curBlock := string(grid[y][x])
 			if curBlock == ">" || curBlock == "<" || curBlock == "^" || curBlock == "v" {
 				trackCars = append(trackCars, &trackCar{x: x, y: y, direction: curBlock})
+				grid[y][x] = "-"
 			}
 		}
 	}
@@ -124,7 +128,6 @@ func createTrackCarsFromGrid(grid []string) []*trackCar {
 }
 
 func sortTrackCars(trackCars []*trackCar) {
-	// TODO: sort by x too
 	sort.Slice(trackCars, func(i, j int) bool {
 		if trackCars[i].y < trackCars[j].y {
 			return true
@@ -136,45 +139,72 @@ func sortTrackCars(trackCars []*trackCar) {
 	})
 }
 
+func printGridWithCars(gridCopy, grid [][]string, trackCars []*trackCar) {
+	for _, tc := range trackCars {
+		gridCopy[tc.y][tc.x] = tc.direction
+	}
+	for y := 0; y < len(gridCopy); y++ {
+		fmt.Println(strings.Join(gridCopy[y], ""))
+	}
+	for _, tc := range trackCars {
+		gridCopy[tc.y][tc.x] = grid[tc.y][tc.x]
+	}
+
+}
+
+type location struct {
+	x int
+	y int
+}
+
 func part1() {
 	// read input into memory
-	grid, err := utils.ReadFileofStrings("test_input.txt")
+	gridLines, err := utils.ReadFileofStrings("input.txt")
 	if err != nil {
 		log.Fatal(err)
 	}
-	for _, l := range grid {
-		fmt.Println(l)
+
+	grid := [][]string{}
+	gridCopy := [][]string{}
+
+	for _, l := range gridLines {
+		line := strings.Split(l, "")
+		grid = append(grid, line)
+		line2 := strings.Split(l, "")
+		gridCopy = append(gridCopy, line2)
 	}
 
 	// find track cars
 	trackCars := createTrackCarsFromGrid(grid)
 	sortTrackCars(trackCars)
-	for _, tc := range trackCars {
-		fmt.Println(tc)
-	}
 
 	crashDetected := false
 	var crashX, crashY int
+	ticks := 0
+	locations := make(map[location]bool)
 	for !crashDetected {
+		// printGridWithCars(gridCopy, grid, trackCars)
 		for _, car := range trackCars {
+			// need to check if cars collide after each crash
+			prevCarLoc := location{x: car.x, y: car.y}
+			locations[prevCarLoc] = false
 			car.makeMove(grid)
+			carLoc := location{x: car.x, y: car.y}
+			if collided := locations[carLoc]; collided == true {
+				crashDetected = true
+				fmt.Println(carLoc)
+				fmt.Println(ticks)
+				return
+			}
+			locations[carLoc] = true
 		}
+		ticks++
 		// need to resort each time
 		sortTrackCars(trackCars)
-		// cars should be next to each other if there is a crash
-		prevCar := trackCars[0]
-		fmt.Printf("Checking car: \n\tx: %d y: %d\n", prevCar.x, prevCar.y)
-		for i := 1; i < len(trackCars); i++ {
-			curr := trackCars[i]
-			fmt.Printf("Checking car: \n\tx: %d y: %d\n", curr.x, curr.y)
-			if curr.x == prevCar.x && curr.y == prevCar.y {
-				crashDetected = true
-				crashX = curr.x
-				crashY = curr.y
-				break
-			}
-			prevCar = curr
-		}
+		// fmt.Println(strings.Repeat("-", 45))
+		// for _, tc := range trackCars {
+		// 	fmt.Println(tc)
+		// }
 	}
 	fmt.Printf("x: %d y: %d\n", crashX, crashY)
 }
