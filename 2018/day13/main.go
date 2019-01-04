@@ -14,6 +14,7 @@ type trackCar struct {
 	y         int
 	direction string
 	nextTurn  int
+	active    bool
 }
 
 func (tc *trackCar) makeTurn() (string, error) {
@@ -119,7 +120,7 @@ func createTrackCarsFromGrid(grid [][]string) []*trackCar {
 		for x := 0; x < len(grid[y]); x++ {
 			curBlock := string(grid[y][x])
 			if curBlock == ">" || curBlock == "<" || curBlock == "^" || curBlock == "v" {
-				trackCars = append(trackCars, &trackCar{x: x, y: y, direction: curBlock})
+				trackCars = append(trackCars, &trackCar{x: x, y: y, direction: curBlock, active: true})
 				grid[y][x] = "-"
 			}
 		}
@@ -209,6 +210,72 @@ func part1() {
 	fmt.Printf("x: %d y: %d\n", crashX, crashY)
 }
 
+func part2() {
+	// read input into memory
+	gridLines, err := utils.ReadFileofStrings("input.txt")
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	grid := [][]string{}
+	gridCopy := [][]string{}
+	for _, l := range gridLines {
+		line := strings.Split(l, "")
+		grid = append(grid, line)
+		line2 := strings.Split(l, "")
+		gridCopy = append(gridCopy, line2)
+	}
+
+	// find track cars
+	trackCars := createTrackCarsFromGrid(grid)
+	fmt.Println(len(trackCars))
+	sortTrackCars(trackCars)
+
+	ticks := 0
+	locations := make(map[location]bool)
+	activeCars := len(trackCars)
+	for activeCars > 1 {
+		// printGridWithCars(gridCopy, grid, trackCars)
+		for _, car := range trackCars {
+			if car.active == false {
+				continue
+			}
+			// need to check if cars collide after each crash
+			prevCarLoc := location{x: car.x, y: car.y}
+			delete(locations, prevCarLoc)
+			car.makeMove(grid)
+			carLoc := location{x: car.x, y: car.y}
+			if collided := locations[carLoc]; collided == true {
+				for _, tc := range trackCars {
+					if tc.x == carLoc.x && tc.y == carLoc.y {
+						tc.active = false
+						continue
+					}
+				}
+				curActiveCars := 0
+				for _, tc := range trackCars {
+					if tc.active == true {
+						curActiveCars++
+					}
+				}
+				activeCars = curActiveCars
+				delete(locations, carLoc)
+			} else {
+				locations[carLoc] = true
+			}
+		}
+		ticks++
+		sortTrackCars(trackCars)
+	}
+	for _, tc := range trackCars {
+		if tc.active == true {
+			fmt.Printf("x: %d y: %d\n", tc.x, tc.y)
+		}
+	}
+
+}
+
 func main() {
-	part1()
+	// part1()
+	part2()
 }
