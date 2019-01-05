@@ -226,9 +226,7 @@ func part2() {
 		gridCopy = append(gridCopy, line2)
 	}
 
-	// find track cars
 	trackCars := createTrackCarsFromGrid(grid)
-	fmt.Println(len(trackCars))
 	sortTrackCars(trackCars)
 
 	ticks := 0
@@ -249,16 +247,10 @@ func part2() {
 				for _, tc := range trackCars {
 					if tc.x == carLoc.x && tc.y == carLoc.y {
 						tc.active = false
+						activeCars--
 						continue
 					}
 				}
-				curActiveCars := 0
-				for _, tc := range trackCars {
-					if tc.active == true {
-						curActiveCars++
-					}
-				}
-				activeCars = curActiveCars
 				delete(locations, carLoc)
 			} else {
 				locations[carLoc] = true
@@ -276,6 +268,6 @@ func part2() {
 }
 
 func main() {
-	// part1()
+	part1()
 	part2()
 }
