@@ -8,7 +8,7 @@ import (
 func TestIntCodeProgram(t *testing.T) {
 	type test struct {
 		input    []int
-		pos int
+		pos      int
 		expected int
 	}
 	tests := []test{

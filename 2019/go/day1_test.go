@@ -1,7 +1,7 @@
 package main
 
 import (
-	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 	"testing"
 )
 
@@ -18,7 +18,7 @@ func TestReqMass(t *testing.T) {
 	}
 
 	for _, tt := range tests {
-		assert.Equal(t, tt.expected, calculateReqMass(tt.input))
+		require.Equal(t, tt.expected, calculateReqMass(tt.input))
 	}
 }
 
@@ -34,6 +34,6 @@ func TestReqMassAndFuel(t *testing.T) {
 	}
 
 	for _, tt := range tests {
-		assert.Equal(t, tt.expected, calcReqMassAndFuel(tt.input))
+		require.Equal(t, tt.expected, calcReqMassAndFuel(tt.input))
 	}
 }

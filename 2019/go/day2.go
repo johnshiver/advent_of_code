@@ -16,7 +16,6 @@ func day2() {
 	_day2pt2()
 }
 
-
 func _day2pt1() int {
 	nums, err := readDay2Input()
 	if err != nil {
@@ -29,8 +28,8 @@ func _day2pt1() int {
 
 func _day2pt2() {
 	expectedOutput := 19690720
-	for noun :=0; noun < 100; noun ++ {
-		for verb :=0; verb < 100; verb++ {
+	for noun := 0; noun < 100; noun++ {
+		for verb := 0; verb < 100; verb++ {
 			nums, err := readDay2Input()
 			if err != nil {
 				panic(err)

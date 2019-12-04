@@ -7,7 +7,6 @@ import (
 )
 
 func ReadFileOfInts(fileName string) ([]int, error) {
-
 	file, err := os.Open(fileName)
 	if err != nil {
 		return nil, err
@@ -24,9 +23,34 @@ func ReadFileOfInts(fileName string) ([]int, error) {
 		}
 		allVals = append(allVals, newInt)
 	}
-
 	if err := scanner.Err(); err != nil {
 		return nil, err
 	}
 	return allVals, nil
+}
+
+func ReadFileOfStrings(fileName string) ([]string, error) {
+	file, err := os.Open(fileName)
+	if err != nil {
+		return nil, err
+	}
+	defer file.Close()
+
+	var allVals []string
+	scanner := bufio.NewScanner(file)
+	for scanner.Scan() {
+		newVal := scanner.Text()
+		allVals = append(allVals, newVal)
+	}
+	if err := scanner.Err(); err != nil {
+		return nil, err
+	}
+	return allVals, nil
+}
+
+func Abs(x int) int {
+	if x < 0 {
+		return -x
+	}
+	return x
 }
