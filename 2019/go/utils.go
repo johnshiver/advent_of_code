@@ -6,7 +6,7 @@ import (
 	"strconv"
 )
 
-func ReadFileOfInts(fileName string) ([]int, error) {
+func readFileOfInts(fileName string) ([]int, error) {
 	file, err := os.Open(fileName)
 	if err != nil {
 		return nil, err
@@ -29,7 +29,7 @@ func ReadFileOfInts(fileName string) ([]int, error) {
 	return allVals, nil
 }
 
-func ReadFileOfStrings(fileName string) ([]string, error) {
+func readFileOfStrings(fileName string) ([]string, error) {
 	file, err := os.Open(fileName)
 	if err != nil {
 		return nil, err
@@ -48,7 +48,7 @@ func ReadFileOfStrings(fileName string) ([]string, error) {
 	return allVals, nil
 }
 
-func Abs(x int) int {
+func abs(x int) int {
 	if x < 0 {
 		return -x
 	}

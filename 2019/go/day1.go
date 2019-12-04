@@ -12,7 +12,7 @@ func day1() {
 }
 
 func _day1pt1() int {
-	ints, err := ReadFileOfInts(DAY1_INPUT)
+	ints, err := readFileOfInts(DAY1_INPUT)
 	if err != nil {
 		panic(err)
 	}
@@ -28,7 +28,7 @@ func calculateReqMass(mass int) int {
 }
 
 func _day1pt2() int {
-	ints, err := ReadFileOfInts(DAY1_INPUT)
+	ints, err := readFileOfInts(DAY1_INPUT)
 	if err != nil {
 		panic(err)
 	}
