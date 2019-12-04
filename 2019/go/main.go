@@ -1,8 +1,9 @@
 package main
 
+import "os"
+
 func main() {
-	//prog := os.Args[1]
-	prog := "3"
+	prog := os.Args[1]
 	switch prog {
 	case "1":
 		day1()
@@ -10,6 +11,8 @@ func main() {
 		day2()
 	case "3":
 		day3()
+	case "4":
+		day4()
 	default:
 		panic("no program to run")
 	}
