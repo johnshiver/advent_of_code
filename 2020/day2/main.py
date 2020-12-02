@@ -11,10 +11,7 @@ def policy1(minval, maxval, val, password):
     for char in password:
         counter[char] += 1
 
-    if not (minval <= counter[val] <= maxval):
-        return False
-
-    return True
+    return minval <= counter[val] <= maxval
 
 
 def policy2(pos1, pos2, val, password):
