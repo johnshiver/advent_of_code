@@ -1,21 +1,3 @@
-def process_input(file_name):
-    # create a list of dicts
-    passports = []
-    with open(file_name, "r") as input_file:
-        curr_pp = dict()
-        for l in input_file:
-            l = l.rstrip("\n")
-            if len(l) == 0:
-                passports.append(curr_pp)
-                curr_pp = dict()
-                continue
-            vals = l.split(" ")
-            for v in vals:
-                k, v = v.split(":")
-                curr_pp[k] = v
-    return passports
-
-
 def input_iterator(input_file_path, string=""):
     input_file = open(input_file_path, "r")
     input_arr = []
