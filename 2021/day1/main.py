@@ -34,25 +34,26 @@ def create_windows(vals):
     window_size = 3
     output = defaultdict(list)
     for i in range(len(vals)):
-        window = i
-        output[window] = vals[i:i+window_size]
+        output[i] = vals[i:i+window_size]
     return output
 
 
 if __name__ == "__main__":
     test_vals = get_input("test_input")
     count = calc_increases(test_vals)
-    print(count == 7)
+    assert count == 7
     vals = get_input("input")
     count = calc_increases(vals)
     print(count)
 
-    # part 2
+    print("# part 2")
     test_vals = create_windows(test_vals)
     count = calc_increases_in_window(test_vals)
-    print(count)
-    print(count == 5)
+    assert count == 5
 
     vals = create_windows(vals)
     count = calc_increases_in_window(vals)
     print(count)
+
+
+
