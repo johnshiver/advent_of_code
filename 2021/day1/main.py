@@ -16,23 +16,16 @@ def calc_increases(vals):
     return count
 
 
-def calc_increases_in_window(vals):
+def calc_increases_in_window(vals, window_size):
     count = 0
-    last = sum(vals[0])
-    for window in range(1, len(vals)):
-        total = sum(vals[window])
-        if total > last:
+    last = sum(vals[0:window_size])
+    for i in range(1, len(vals) - window_size + 1):
+        curr = last - vals[i - 1]
+        curr += vals[i + window_size - 1]
+        if curr > last:
             count += 1
-        last = total
+        last = curr
     return count
-
-
-def create_windows(vals):
-    window_size = 3
-    output = defaultdict(list)
-    for i in range(len(vals)):
-        output[i] = vals[i : i + window_size]
-    return output
 
 
 if __name__ == "__main__":
@@ -43,15 +36,11 @@ if __name__ == "__main__":
 
     vals = get_input("input")
     count = calc_increases(vals)
-    print(count)
     assert count == 1387
 
     print("# part 2------------------")
-    test_vals = create_windows(test_vals)
-    count = calc_increases_in_window(test_vals)
+    count = calc_increases_in_window(test_vals, 3)
     assert count == 5
 
-    vals = create_windows(vals)
-    count = calc_increases_in_window(vals)
-    print(count)
+    count = calc_increases_in_window(vals, 3)
     assert count == 1362
