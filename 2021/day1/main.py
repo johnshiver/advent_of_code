@@ -1,6 +1,3 @@
-from collections import defaultdict
-
-
 def get_input(file_name):
     with open(file_name, "r") as input_file:
         return [int(l) for l in input_file.readlines()]
