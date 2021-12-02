@@ -19,9 +19,9 @@ def calc_increases(vals):
 def calc_increases_in_window(vals, window_size):
     count = 0
     last = sum(vals[0:window_size])
-    for i in range(1, len(vals) - window_size + 1):
-        curr = last - vals[i - 1]
-        curr += vals[i + window_size - 1]
+    for i in range(len(vals) - window_size):
+        curr = last - vals[i]
+        curr += vals[i + window_size]
         if curr > last:
             count += 1
         last = curr
