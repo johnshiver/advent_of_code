@@ -41,7 +41,9 @@ def analyze_report_part_2(report):
 
     curr_bit = 0
     while len(co2_candidates) > 1:
-        co2_candidates = [x for x in co2_candidates if x[curr_bit] == uncommon[curr_bit]]
+        co2_candidates = [
+            x for x in co2_candidates if x[curr_bit] == uncommon[curr_bit]
+        ]
         common, uncommon = analyze_most_common_bits(co2_candidates)
         curr_bit += 1
     co2_rating = int("".join(co2_candidates[0]), 2)
@@ -68,11 +70,11 @@ def analyze_most_common_bits(report):
 
 if __name__ == "__main__":
     print("day 3 part 1")
-    test_report = get_input("/Users/jshiver/projects/advent_of_code/2021/day3/test_input")
+    test_report = get_input("test_input")
     resp = analyze_report(test_report)
     print(resp)
     assert resp == 198
-    report = get_input("/Users/jshiver/projects/advent_of_code/2021/day3/input")
+    report = get_input("input")
     resp = analyze_report(report)
     print(resp)
 

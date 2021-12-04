@@ -27,11 +27,11 @@ def calc_increases_in_window(vals, window_size):
 
 if __name__ == "__main__":
     print("# part 1------------------")
-    test_vals = get_input("2021/day1/test_input")
+    test_vals = get_input("test_input")
     count = calc_increases(test_vals)
     assert count == 7
 
-    vals = get_input("2021/day1/input")
+    vals = get_input("input")
     count = calc_increases(vals)
     assert count == 1387
 
