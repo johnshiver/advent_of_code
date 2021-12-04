@@ -109,7 +109,7 @@ if __name__ == "__main__":
     print("day 4 part 1")
     raw = get_input("/Users/johnshiver/projects/advent_of_code/2021/day4/test_input")
     test_moves, test_boards = create_boards_and_moves(raw)
-    evaluate_moves(test_moves, test_boards) == 4512
+    assert evaluate_moves(test_moves, test_boards) == 4512
     raw = get_input("/Users/johnshiver/projects/advent_of_code/2021/day4/input")
     moves, boards = create_boards_and_moves(raw)
     print(evaluate_moves(moves, boards))
