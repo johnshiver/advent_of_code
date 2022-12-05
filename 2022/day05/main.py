@@ -24,7 +24,7 @@ def parse_stack_input(input):
     for i, c in enumerate(input[-1]):
         if c.isdigit():
             stack_count = max(stack_count, int(c))
-    stacks = [[] for i in range(stack_count)]
+    stacks = [[] for _ in range(stack_count)]
     for line in input:
         for i, c in enumerate(line):
             if not c.isalpha():
@@ -39,8 +39,8 @@ def parse_move_input(input):
     for line in input:
         parts = line.split(" ")
         count = int(parts[1])
-        source = int(parts[3])
-        dest = int(parts[5])
+        source = int(parts[3]) - 1
+        dest = int(parts[5]) - 1
         moves.append(move(source=source, count=count, destination=dest))
 
     return moves
@@ -49,15 +49,15 @@ def parse_move_input(input):
 def apply_moves_to_stacks_9000(stacks, moves):
     for move in moves:
         for _ in range(move.count):
-            stacks[move.destination - 1].append(stacks[move.source - 1].pop())
+            stacks[move.destination].append(stacks[move.source].pop())
     return stacks
 
 
 def apply_moves_to_stacks_9001(stacks, moves):
     for move in moves:
-        stacks[move.destination - 1].extend(stacks[move.source - 1][-move.count :])
+        stacks[move.destination].extend(stacks[move.source][-move.count :])
         for _ in range(move.count):
-            stacks[move.source - 1].pop()
+            stacks[move.source].pop()
 
     return stacks
 
