@@ -1,5 +1,6 @@
 from queue import PriorityQueue
 from typing import List
+from math import prod
 
 
 def get_input(file_name):
@@ -154,9 +155,9 @@ def monkey_inspections(monkeies: List[Monkey]):
                 else:
                     target_monkey = monkies[m.if_false]
 
-                print(
-                    f"monkey {m.identifier} throws {inspected_item} to monkey {target_monkey.identifier}"
-                )
+                # print(
+                #     f"monkey {m.identifier} throws {inspected_item} to monkey {target_monkey.identifier}"
+                # )
                 target_monkey.catch_item(inspected_item)
             m.starting_items = []
     for m in monkeies:
@@ -166,7 +167,7 @@ def monkey_inspections(monkeies: List[Monkey]):
     return top_monkies[0] * top_monkies[1]
 
 
-def monkey_inspections_no_worries(monkeies: List[Monkey]):
+def monkey_inspections_no_worries(monkeies: List[Monkey], level):
     # After each monkey inspects an item but before it tests your worry level
     # your relief that the monkey's inspection didn't damage the item causes your worry level to be
     # divided by three
@@ -175,7 +176,7 @@ def monkey_inspections_no_worries(monkeies: List[Monkey]):
     # each monkey takes a turn (round)
     # 20 rounds
     for i in range(10000):
-        print(f"round {i}")
+        # print(f"round {i}")
         for m in monkeies:
             # it inspects and throws all of the items it is holding one at a time and in the order listed
             # Monkey 0 goes first, then monkey 1, and so on until each monkey has had one turn
@@ -185,10 +186,12 @@ def monkey_inspections_no_worries(monkeies: List[Monkey]):
             items = m.starting_items[::-1]
             while items:
                 item_to_inspect = items.pop()
-                print(f"monkey {m.identifier} inspects")
+                # print(f"monkey {m.identifier} inspects")
 
                 # monkey inspects + applies operation to item
                 inspected_item = m.operation(item_to_inspect)
+
+                inspected_item %= level
 
                 # print(f"worry level {inspected_item}")
 
@@ -200,18 +203,22 @@ def monkey_inspections_no_worries(monkeies: List[Monkey]):
                 target_monkey = None
                 if m.test(inspected_item):
                     target_monkey = monkies[m.if_true]
+                    # try to reset
                 else:
                     target_monkey = monkies[m.if_false]
+                    # inspected_item %= m.test_level
 
                 # print(
                 #     f"monkey {m.identifier} throws {inspected_item} to monkey {target_monkey.identifier}"
                 # )
                 target_monkey.catch_item(inspected_item)
             m.starting_items = []
-    # for m in monkeies:
-    #     print(f"monkey {m.identifier} {m.inspections}")
+        # if i % 1000 == 0 or i == 20:
+        #     print(f"round {i}")
+        #     for m in monkeies:
+        #         print(f"monkey {m.identifier} {m.inspections}")
     top_monkies = sorted([m.inspections for m in monkeies], reverse=True)
-    # print(top_monkies)
+    print(top_monkies)
     return top_monkies[0] * top_monkies[1]
 
 
@@ -228,4 +235,9 @@ if __name__ == "__main__":
 
     print("# part 2------------------")
     monkies = [parse_monkey(m) for m in test_vals]
-    print(monkey_inspections_no_worries(monkies))
+    level = prod([m.test_level for m in monkies])
+    print(monkey_inspections_no_worries(monkies, level))
+
+    monkies = [parse_monkey(m) for m in vals]
+    level = prod([m.test_level for m in monkies])
+    print(monkey_inspections_no_worries(monkies, level))
