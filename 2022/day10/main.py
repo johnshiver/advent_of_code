@@ -1,8 +1,3 @@
-from collections import namedtuple
-
-pos = namedtuple("pos", ["x", "y"])
-
-
 def get_input(file_name):
     with open(file_name, "r") as input_file:
         return [l.rstrip("\n") for l in input_file.readlines()]
