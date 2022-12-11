@@ -26,15 +26,18 @@ class Monkey:
 
         # ex. [23, 11, 11]
         # priority by position
-        self.starting_items = PriorityQueue()
-        for i in starting_items:
-            self.starting_items.put(i)
+        # self.starting_items = PriorityQueue()
+        # for i in starting_items:
+        #     self.starting_items.put(i)
+
+        self.starting_items = starting_items
 
         # Operation shows how your worry level changes as that monkey inspects an item.
         # (An operation like new = old * 5 means that your worry level after the monkey inspected the item is five times whatever your worry level was before inspection.)
         self.operation = operation
 
         # Test shows how the monkey uses your worry level to decide where to throw an item next.
+        self.test_level = test_level
         self.test = lambda x: x % test_level == 0
 
         # If true shows what happens with an item if the Test was true.
@@ -54,12 +57,12 @@ class Monkey:
     def catch_item(self, item):
         # put at the end
         """ """
-        self.starting_items.put(item)
+        self.starting_items.append(item)
 
-    def get_next_item(self):
-        # put at the end
-        """ """
-        return self.starting_items.get()
+    # def get_next_item(self):
+    #     # put at the end
+    #     """ """
+    #     return self.starting_items.get()
 
     def throw_item(self, item_pos: int) -> int:
         """ """
@@ -77,9 +80,9 @@ def parse_monkey(monkey_input):
     identifier_raw = monkey_input[0].strip()
     items_raw = monkey_input[1].strip()
     operation_raw = monkey_input[2].strip()
-    test_raw = monkey_input[3].strip()
-    if_true = monkey_input[4]
-    if_false = monkey_input[5]
+    test_raw = monkey_input[3].strip().split(" ")
+    if_true = monkey_input[4].strip().split(" ")
+    if_false = monkey_input[5].strip().split(" ")
 
     identifier = int(identifier_raw.split(" ")[1].rstrip(":"))
 
@@ -129,9 +132,10 @@ def monkey_inspections(monkeies: List[Monkey]):
             # The process of each monkey taking a single turn is called a round.
 
             # monkey inspects and
-            while not m.starting_items.empty():
-                item_to_inspect = m.get_next_item()
-                print(f"monkey {m.identifier} inspects {item_to_inspect}")
+            items = m.starting_items[::-1]
+            while items:
+                item_to_inspect = items.pop()
+                # print(f"monkey {m.identifier} inspects {item_to_inspect}")
 
                 # monkey inspects + applies operation to item
                 inspected_item = m.operation(item_to_inspect)
@@ -154,6 +158,7 @@ def monkey_inspections(monkeies: List[Monkey]):
                     f"monkey {m.identifier} throws {inspected_item} to monkey {target_monkey.identifier}"
                 )
                 target_monkey.catch_item(inspected_item)
+            m.starting_items = []
     for m in monkeies:
         print(f"monkey {m.identifier} {m.inspections}")
     top_monkies = sorted([m.inspections for m in monkeies], reverse=True)
@@ -161,14 +166,66 @@ def monkey_inspections(monkeies: List[Monkey]):
     return top_monkies[0] * top_monkies[1]
 
 
+def monkey_inspections_no_worries(monkeies: List[Monkey]):
+    # After each monkey inspects an item but before it tests your worry level
+    # your relief that the monkey's inspection didn't damage the item causes your worry level to be
+    # divided by three
+    # and rounded down to the nearest integer.
+
+    # each monkey takes a turn (round)
+    # 20 rounds
+    for i in range(10000):
+        print(f"round {i}")
+        for m in monkeies:
+            # it inspects and throws all of the items it is holding one at a time and in the order listed
+            # Monkey 0 goes first, then monkey 1, and so on until each monkey has had one turn
+            # The process of each monkey taking a single turn is called a round.
+
+            # monkey inspects and
+            items = m.starting_items[::-1]
+            while items:
+                item_to_inspect = items.pop()
+                print(f"monkey {m.identifier} inspects")
+
+                # monkey inspects + applies operation to item
+                inspected_item = m.operation(item_to_inspect)
+
+                # print(f"worry level {inspected_item}")
+
+                m.inspections += 1
+
+                # because monkey didnt destroy, divide by 3 round down
+                # inspected_item //= 3  # TODO: check this
+
+                target_monkey = None
+                if m.test(inspected_item):
+                    target_monkey = monkies[m.if_true]
+                else:
+                    target_monkey = monkies[m.if_false]
+
+                # print(
+                #     f"monkey {m.identifier} throws {inspected_item} to monkey {target_monkey.identifier}"
+                # )
+                target_monkey.catch_item(inspected_item)
+            m.starting_items = []
+    # for m in monkeies:
+    #     print(f"monkey {m.identifier} {m.inspections}")
+    top_monkies = sorted([m.inspections for m in monkeies], reverse=True)
+    # print(top_monkies)
+    return top_monkies[0] * top_monkies[1]
+
+
 if __name__ == "__main__":
     print("# part 1------------------")
-    test_vals = get_input(
-        "/Users/johnshiver/projects/advent_of_code/2022/day11/test_input"
-    )
+    test_vals = get_input("/Users/jshiver/projects/advent_of_code/2022/day11/test_input")
     monkies = [parse_monkey(m) for m in test_vals]
+    monkey_inspections(monkies) == 10605
+    vals = get_input("/Users/jshiver/projects/advent_of_code/2022/day11/input")
+    monkies = [parse_monkey(m) for m in vals]
     print(monkey_inspections(monkies))
 
     # vals = get_input("/Users/johnshiver/projects/advent_of_code/2022/day11/input")
 
     print("# part 2------------------")
+    monkies = [parse_monkey(m) for m in test_vals]
+    print(monkey_inspections_no_worries(monkies))
