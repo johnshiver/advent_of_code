@@ -28,7 +28,7 @@ def get_dimensions(moves):
         min_x = min(min_x, x)
         max_y = max(max_y, y)
         min_y = min(min_y, y)
-    print(f"x range: {min_x}-{max_x} y range: {min_y}-{max_y}")
+    # print(f"x range: {min_x}-{max_x} y range: {min_y}-{max_y}")
     return ((max_x - min_x) * 3, (max_y - min_y) * 3)
 
 
@@ -100,7 +100,7 @@ def apply_moves(moves, knot_count):
                 grid[curr.y][curr.x] = f"{i+1}"
                 grid[nex.y][nex.x] = f"{i}"
 
-            tail_positions.add((positions[-1].x, positions[-1].y))
+            tail_positions.add(positions[-1])
 
             # print_grid(grid)
 
@@ -193,4 +193,4 @@ if __name__ == "__main__":
     print("# part 2------------------")
     test_vals = get_input("test_input_2")
     assert apply_moves(test_vals, 10) == 36
-    print(apply_moves(vals, 10))
+    assert apply_moves(vals, 10) == 2643
