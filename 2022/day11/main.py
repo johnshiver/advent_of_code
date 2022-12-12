@@ -23,14 +23,9 @@ class Monkey:
 
         # Starting items lists your worry level for each item the monkey
         # is currently holding in the order they will be inspected.
-        # TODO: maybe priority queue?
 
         # ex. [23, 11, 11]
         # priority by position
-        # self.starting_items = PriorityQueue()
-        # for i in starting_items:
-        #     self.starting_items.put(i)
-
         self.starting_items = starting_items
 
         # Operation shows how your worry level changes as that monkey inspects an item.
@@ -59,14 +54,6 @@ class Monkey:
         # put at the end
         """ """
         self.starting_items.append(item)
-
-    # def get_next_item(self):
-    #     # put at the end
-    #     """ """
-    #     return self.starting_items.get()
-
-    def throw_item(self, item_pos: int) -> int:
-        """ """
 
 
 def parse_monkey(monkey_input):
@@ -143,7 +130,6 @@ def monkey_inspections(monkeies: List[Monkey]):
 
                 # print(f"worry level {inspected_item}")
 
-                # unclear if this is right
                 m.inspections += 1
 
                 # because monkey didnt destroy, divide by 3 round down
@@ -174,7 +160,6 @@ def monkey_inspections_no_worries(monkeies: List[Monkey], level):
     # and rounded down to the nearest integer.
 
     # each monkey takes a turn (round)
-    # 20 rounds
     for i in range(10000):
         # print(f"round {i}")
         for m in monkeies:
@@ -186,27 +171,19 @@ def monkey_inspections_no_worries(monkeies: List[Monkey], level):
             items = m.starting_items[::-1]
             while items:
                 item_to_inspect = items.pop()
-                # print(f"monkey {m.identifier} inspects")
 
                 # monkey inspects + applies operation to item
                 inspected_item = m.operation(item_to_inspect)
 
                 inspected_item %= level
 
-                # print(f"worry level {inspected_item}")
-
                 m.inspections += 1
-
-                # because monkey didnt destroy, divide by 3 round down
-                # inspected_item //= 3  # TODO: check this
 
                 target_monkey = None
                 if m.test(inspected_item):
                     target_monkey = monkies[m.if_true]
-                    # try to reset
                 else:
                     target_monkey = monkies[m.if_false]
-                    # inspected_item %= m.test_level
 
                 # print(
                 #     f"monkey {m.identifier} throws {inspected_item} to monkey {target_monkey.identifier}"
@@ -230,8 +207,6 @@ if __name__ == "__main__":
     vals = get_input("/Users/jshiver/projects/advent_of_code/2022/day11/input")
     monkies = [parse_monkey(m) for m in vals]
     print(monkey_inspections(monkies))
-
-    # vals = get_input("/Users/johnshiver/projects/advent_of_code/2022/day11/input")
 
     print("# part 2------------------")
     monkies = [parse_monkey(m) for m in test_vals]
