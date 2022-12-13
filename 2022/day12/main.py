@@ -31,7 +31,13 @@ def get_starting_pos(grid):
     return pos(start_x, start_y), pos(end_x, end_y)
 
 
-def can_move(grid, x, y):
+def can_move(grid, x_pos: pos, y_pos: pos):
+    if not (0 <= x_pos.x < len(grid[0]) and 0 <= x_pos.y < len(grid)):
+        return False
+    if not (0 <= y_pos.x < len(grid[0]) and 0 <= y_pos.y < len(grid)):
+        return False
+    x = grid[x_pos.y][x_pos.x]
+    y = grid[y_pos.y][y_pos.x]
     if x == "S":
         return True
     if y == "S":
@@ -41,14 +47,18 @@ def can_move(grid, x, y):
     return (ascii_lowercase.find(y) - ascii_lowercase.find(x)) <= 1
 
 
-def elevation_diff(grid, x, y):
-    y_c = grid[y.y][y.x]
-    x_c = grid[x.y][x.x]
-    if y_c == "S":
-        return 10
-    if y_c == "E" and x_c == "z":
+def elevation_diff(grid, x_pos, y_pos):
+    y = grid[y_pos.y][y_pos.x]
+    x = grid[x_pos.y][x_pos.x]
+
+    # dont go to start
+    if y == "S":
+        return int(float("inf"))
+
+    # height diff for last move
+    if y == "E" and x == "z":
         return 1
-    return ascii_lowercase.find(y_c) - ascii_lowercase.find(x_c)
+    return ascii_lowercase.find(y) - ascii_lowercase.find(x)
 
 
 def distance(x, y):
@@ -58,6 +68,7 @@ def distance(x, y):
 def find_shortest_path(grid, start: pos, end: pos, positions):
     print(f"{start} {end} {grid[start.y][start.x]}")
 
+    # if we have moved to end, we are done
     if start == end:
         return 0
 
@@ -72,12 +83,11 @@ def find_shortest_path(grid, start: pos, end: pos, positions):
         [
             (d, elevation_diff(grid, start, d), distance(d, end))
             for d in directions
-            if 0 <= d.x < len(grid[0])
-            and 0 <= d.y < len(grid)
+            if can_move(grid, start, d)
             and d not in positions
             and elevation_diff(grid, start, d) <= 1
         ],
-        key=lambda x: x[2],
+        key=lambda x: (x[1], x[2]),
     )
 
     if not best_choices:
@@ -99,9 +109,7 @@ def find_shortest_path(grid, start: pos, end: pos, positions):
 
 if __name__ == "__main__":
     print("# part 1------------------")
-    t_grid = get_input(
-        "/Users/johnshiver/projects/advent_of_code/2022/day12/test_input"
-    )
+    t_grid = get_input("/Users/jshiver/projects/advent_of_code/2022/day12/test_input")
     print_grid(t_grid)
     start, end = get_starting_pos(t_grid)
     positions = set()
@@ -109,9 +117,9 @@ if __name__ == "__main__":
     # assert find_shortest_path(t_grid, start, end, positions) == 31
     print(find_shortest_path(t_grid, start, end, positions))
 
-    grid = get_input("/Users/johnshiver/projects/advent_of_code/2022/day12/input")
-    start, end = get_starting_pos(grid)
-    positions = set()
-    print(find_shortest_path(grid, start, end, positions))
+    # grid = get_input("/Users/jshiver/projects/advent_of_code/2022/day12/input")
+    # start, end = get_starting_pos(grid)
+    # positions = set()
+    # print(find_shortest_path(grid, start, end, positions))
 
     print("# part 2------------------")
