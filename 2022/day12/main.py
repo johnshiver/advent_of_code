@@ -33,6 +33,15 @@ def get_starting_pos(grid):
     return pos(start_x, start_y), pos(end_x, end_y)
 
 
+def get_starting_pos_part_two(grid):
+    positions = []
+    for y in range(len(grid)):
+        for x in range(len(grid[0])):
+            if grid[y][x] in ("S", "a"):
+                positions.append(pos(x, y))
+    return positions
+
+
 def can_move(grid, x_pos: pos, y_pos: pos):
     if not (0 <= x_pos.x < len(grid[0]) and 0 <= x_pos.y < len(grid)):
         return False
@@ -47,10 +56,6 @@ def can_move(grid, x_pos: pos, y_pos: pos):
     if y == "E":
         return x == "z"
     return (ascii_lowercase.find(y) - ascii_lowercase.find(x)) <= 1
-
-
-def distance(x, y):
-    return abs(y.x - x.x) + abs(y.y - x.y)
 
 
 def create_graph(grid):
@@ -107,6 +112,37 @@ def dijkstra(graph, starting_node, end_node):
     return parents_map, node_costs
 
 
+def dijkstra_part_two(graph, starting_node, end_node):
+    visited = set()
+    parents_map = {}
+    pq = []
+    node_costs = defaultdict(lambda: float("inf"))
+    node_costs[starting_node] = 0
+    heap.heappush(pq, (0, starting_node))
+
+    while pq:
+        # go greedily by always extending the shorter cost nodes first
+        _, node = heap.heappop(pq)
+        visited.add(node)
+
+        for adj_node, weight in graph[node].items():
+            if adj_node in visited:
+                continue
+
+            new_cost = node_costs[node] + weight
+            if node_costs[adj_node] > new_cost:
+                parents_map[adj_node] = node
+                node_costs[adj_node] = new_cost
+                heap.heappush(pq, (new_cost, adj_node))
+
+        # after this is working, add in this short circuit
+        # we are done
+        if node == end_node:
+            break
+
+    return parents_map, node_costs
+
+
 if __name__ == "__main__":
     print("# part 1------------------")
 
@@ -117,10 +153,31 @@ if __name__ == "__main__":
     parents, costs = dijkstra(graph, start, end)
     assert costs[end] == 31
 
-    t_grid = get_input("/Users/jshiver/projects/advent_of_code/2022/day12/input")
-    graph = create_graph(t_grid)
-    start, end = get_starting_pos(t_grid)
+    grid = get_input("/Users/jshiver/projects/advent_of_code/2022/day12/input")
+    graph = create_graph(grid)
+    start, end = get_starting_pos(grid)
     parents, costs = dijkstra(graph, start, end)
     print(costs[end])
 
     print("# part 2------------------")
+    # gateher starting points
+    t_grid = get_input("/Users/jshiver/projects/advent_of_code/2022/day12/test_input")
+    print_grid(t_grid)
+    _, end = get_starting_pos(t_grid)
+    different_costs = []
+    for start in get_starting_pos_part_two(t_grid):
+        print(start)
+        t_graph = create_graph(t_grid)
+        parents, costs = dijkstra_part_two(t_graph, start, end)
+        different_costs.append(costs[end])
+    assert min(different_costs) == 29
+
+    grid = get_input("/Users/jshiver/projects/advent_of_code/2022/day12/input")
+    _, end = get_starting_pos(grid)
+    different_costs = []
+    for start in get_starting_pos_part_two(grid):
+        graph = create_graph(grid)
+        parents, costs = dijkstra_part_two(graph, start, end)
+        different_costs.append(costs[end])
+        print(min(different_costs))
+    print(min(different_costs))
