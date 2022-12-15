@@ -119,7 +119,6 @@ if __name__ == "__main__":
     pairs.append([[6]])
 
     pairs_sorted = merge_sort(pairs)
-    # pairs_sorted = sorted(pairs, key=functools.cmp_to_key(compare_packet_pairs2))
     print(pairs_sorted)
     x = pairs_sorted.index([[2]]) + 1
     y = pairs_sorted.index([[6]]) + 1
@@ -130,8 +129,6 @@ if __name__ == "__main__":
     pairs.append([[6]])
 
     pairs_sorted = merge_sort(pairs)
-    # pairs_sorted = sorted(pairs, key=functools.cmp_to_key(compare_packet_pairs2))
-    # print(pairs_sorted)
     x = pairs_sorted.index([[2]]) + 1
     y = pairs_sorted.index([[6]]) + 1
     print(x * y)
