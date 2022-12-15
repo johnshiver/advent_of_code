@@ -24,15 +24,15 @@ def compare_packet_pairs(l, r):
             if left != right:
                 return left < right
         if left_t == list and right_t == list:
-            compared = compare_packet_pairs(left[:], right[:])
+            compared = compare_packet_pairs(left, right)
             if compared is not None:
                 return compared
         if left_t == int and right_t == list:
-            compared = compare_packet_pairs([left], right[:])
+            compared = compare_packet_pairs([left], right)
             if compared is not None:
                 return compared
         if left_t == list and right_t == int:
-            compared = compare_packet_pairs(left[:], [right])
+            compared = compare_packet_pairs(left, [right])
             if compared is not None:
                 return compared
 
