@@ -64,8 +64,8 @@ def apply_moves(moves, knot_count):
     starting_y = len(grid) // 2
     # head_pos = pos(starting_x, starting_y)
     # tail_pos = pos(starting_x, starting_y)
-    positions = [pos(starting_x, starting_y) for _ in range(knot_count)]
-    tail_positions.add((positions[-1].x, positions[-1].y))
+    knots = [pos(starting_x, starting_y) for _ in range(knot_count)]
+    tail_positions.add((knots[-1].x, knots[-1].y))
     grid[starting_y][starting_x] = head
     # print_grid(grid)
 
@@ -75,7 +75,7 @@ def apply_moves(moves, knot_count):
         # print(f"{direction} == {count}")
         for _ in range(count):
             # move each position
-            head_pos = positions[0]
+            head_pos = knots[0]
             match direction:
                 case "R":
                     head_pos = pos(head_pos.x + 1, head_pos.y)
@@ -85,22 +85,22 @@ def apply_moves(moves, knot_count):
                     head_pos = pos(head_pos.x, head_pos.y - 1)
                 case "D":
                     head_pos = pos(head_pos.x, head_pos.y + 1)
-            positions[0] = head_pos
+            knots[0] = head_pos
 
             # after moving head, move everything else relative to it
-            for i in range(len(positions) - 1):
-                curr, nex = positions[i], positions[i + 1]
+            for i in range(len(knots) - 1):
+                curr, nex = knots[i], knots[i + 1]
                 # print(curr, nex)
 
                 curr, nex = move_rope(curr, nex, direction)
-                positions[i] = curr
-                positions[i + 1] = nex
+                knots[i] = curr
+                knots[i + 1] = nex
 
                 # put tail first, because overlap will be an H
                 grid[curr.y][curr.x] = f"{i+1}"
                 grid[nex.y][nex.x] = f"{i}"
 
-            tail_positions.add(positions[-1])
+            tail_positions.add(knots[-1])
 
             # print_grid(grid)
 
