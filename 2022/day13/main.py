@@ -50,50 +50,6 @@ def compare_packet_pairs(l, r):
     return None
 
 
-def compare_packet_pairs2(l, r):
-    l = l[::-1]
-    r = r[::-1]
-
-    while l and r:
-        left = l.pop()
-        right = r.pop()
-
-        left_t = type(left)
-        right_t = type(right)
-
-        if left_t == int and right_t == int:
-            if left < right:
-                return 1
-            if left > right:
-                return -1
-
-        if left_t == list and right_t == list:
-            compared = compare_packet_pairs(left[:], right[:])
-            if compared != 0:
-                return compared
-        if left_t == int and right_t == list:
-            compared = compare_packet_pairs([left], right[:])
-            if compared != 0:
-                return compared
-        if left_t == list and right_t == int:
-            compared = compare_packet_pairs(left[:], [right])
-            if compared != 0:
-                return compared
-
-    # we ran out of items to compare
-    # print(f"ran out of items: l: {len(l)} r: {len(r)}")
-
-    # if only left is empty, we're good
-    if not len(l) and len(r):
-        return 1
-
-    if len(l) and not len(r):
-        return -1
-
-    # means we cant make a comparison
-    return 0
-
-
 def merge_sort(pairs):
     if len(pairs) < 2:
         return pairs
@@ -130,9 +86,6 @@ def merge(left, right):
         r += 1
 
     return final
-
-
-import functools
 
 
 if __name__ == "__main__":
