@@ -194,7 +194,6 @@ if __name__ == "__main__":
     while keep_pouring:
         keep_pouring = pour_sand(grid, 500, 0)
         count += 1
-        print(count)
     # grid = draw_rocks_on_grid(grid, rock_formations)
     # grid = pour_sand(grid)
     # count sand on grid
