@@ -1,5 +1,3 @@
-
-
 """
 --- Day 1: Trebuchet?! ---
 
@@ -16,9 +14,11 @@ As they're making the final adjustments, they discover that their calibration do
 The newly-improved calibration document consists of lines of text; each line originally contained a specific calibration value that the Elves now need to recover. On each line, the calibration value can be found by combining the first digit and the last digit (in that order) to form a single two-digit number.
 """
 
+
 def get_input(file_name):
     with open(file_name, "r") as input_file:
         return [l.rstrip() for l in input_file.readlines()]
+
 
 def calibrate(text):
     numbers = {
@@ -33,10 +33,6 @@ def calibrate(text):
         "nine": "9",
     }
 
-    # assume its at least 2
-    if len(text) < 2:
-        return 0
-    
     first_seen = None
     last_seen = None
 
@@ -53,29 +49,24 @@ def calibrate(text):
                     if first_seen is None:
                         first_seen = numbers[n]
                     last_seen = numbers[n]
-            
-    # print(first_seen, last_seen)
+
     return int(first_seen + last_seen)
 
 
-def main():
+# print("# part 1------------------")
+# test_vals = get_input("test_input")
+# fixed = sum([calibrate(l) for l in test_vals])
+# assert fixed == 142
 
-    # print("# part 1------------------")
-    # test_vals = get_input("test_input")
-    # fixed = sum([calibrate(l) for l in test_vals])
-    # assert fixed == 142
+# test_vals = get_input("input")
+# fixed = sum([calibrate(l) for l in test_vals])
+# print(fixed)
 
-    # test_vals = get_input("input")
-    # fixed = sum([calibrate(l) for l in test_vals])
-    # print(fixed)
+print("# part 2------------------")
+test_vals = get_input("test_input_2")
+fixed = sum([calibrate(l) for l in test_vals])
+assert fixed == 281
 
-    print("# part 2------------------")
-    test_vals = get_input("test_input_2")
-    fixed = sum([calibrate(l) for l in test_vals])
-    assert fixed == 281
-
-    test_vals = get_input("input")
-    fixed = sum([calibrate(l) for l in test_vals])
-    print(fixed)
-
-main()
+test_vals = get_input("input")
+fixed = sum([calibrate(l) for l in test_vals])
+print(fixed)
