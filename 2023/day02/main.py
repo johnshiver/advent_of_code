@@ -20,13 +20,8 @@ def check_game_records(game_record, max_red, max_green, max_blue):
     for r in all_rounds:
         colors = r.split(',')
         for c in colors:
-            # print(c)
-            # count, color = c.split(' ')
-            # print(count, color)
-            # print(c.lstrip().split(' '))
             count, color = c.lstrip().split(' ')
             count = int(count)
-            # print(count, color)
             if color == "green" and count > max_green:
                 return 0
             if color == "red" and count > max_red:
@@ -36,21 +31,14 @@ def check_game_records(game_record, max_red, max_green, max_blue):
     return int(game_number)
 
 def check_game_records_2(game_record):
-    # get game number
-    game_number = parse_game_number(game_record)
     _, all_rounds = game_record.split(":")
     all_rounds = all_rounds.split(";")
     max_red = max_blue = max_green = 0
     for r in all_rounds:
         colors = r.split(',')
         for c in colors:
-            # print(c)
-            # count, color = c.split(' ')
-            # print(count, color)
-            # print(c.lstrip().split(' '))
             count, color = c.lstrip().split(' ')
             count = int(count)
-            # print(count, color)
             if color == "green":
                 max_green = max(max_green, count)
             if color == "red": 

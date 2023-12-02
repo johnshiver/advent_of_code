@@ -54,20 +54,20 @@ def calibrate(text):
                         first_seen = numbers[n]
                     last_seen = numbers[n]
             
-    print(first_seen, last_seen)
+    # print(first_seen, last_seen)
     return int(first_seen + last_seen)
 
 
 def main():
 
-    print("# part 1------------------")
-    test_vals = get_input("test_input")
-    fixed = sum([calibrate(l) for l in test_vals])
-    assert fixed == 142
+    # print("# part 1------------------")
+    # test_vals = get_input("test_input")
+    # fixed = sum([calibrate(l) for l in test_vals])
+    # assert fixed == 142
 
-    test_vals = get_input("input")
-    fixed = sum([calibrate(l) for l in test_vals])
-    print(fixed)
+    # test_vals = get_input("input")
+    # fixed = sum([calibrate(l) for l in test_vals])
+    # print(fixed)
 
     print("# part 2------------------")
     test_vals = get_input("test_input_2")
